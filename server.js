@@ -87,6 +87,30 @@ app.post("/api/oracle", (req, res) => {
 });
 
 // servir le build React en production
+const https = require("https");
+app.use(express.json({limit:"50kb"}));
+app.post("/api/oracle", (req, res) => {
+  const body = JSON.stringify(req.body);
+  const options = {
+    hostname: "api.anthropic.com",
+    path: "/v1/messages",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": process.env.ANTHROPIC_API_KEY || "",
+      "anthropic-version": "2023-06-01",
+      "Content-Length": Buffer.byteLength(body)
+    }
+  };
+  const proxy = https.request(options, (apiRes) => {
+    res.status(apiRes.statusCode);
+    apiRes.pipe(res);
+  });
+  proxy.on("error", e => res.status(500).json({error:e.message}));
+  proxy.write(body);
+  proxy.end();
+});
+
 app.use(express.static(path.join(__dirname, "dist")));
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "dist", "index.html"))
