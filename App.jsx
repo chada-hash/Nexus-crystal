@@ -343,7 +343,7 @@ export default function NEXUSCrystal() {
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-          model:"claude-sonnet-4-20250514",max_tokens:1000,
+          model:"claude-sonnet-4-5",max_tokens:1000,
           messages:[{role:"user",content:
             "Tu es NEXUS, oracle de phonosémantique arabe.\n"+
             "Texte : «"+q+"» · Abjad : "+oTotal+" → réduit : "+oReduced+" = "+(ARCH[oReduced]||"?")+"\n"+
